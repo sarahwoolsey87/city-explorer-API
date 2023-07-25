@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -23,8 +25,8 @@ app.get('/weather', (req, res) => {
   // Get lat, lon, and searchQuery from the query parameters
   const { lat, lon, searchQuery } = req.query;
 
-  // Filter the weatherData array based on the provided lat, lon, and searchQuery
-  const filteredWeatherData = weatherData.filter((weather) => {
+  // Find the city in the weatherData that matches the provided lat, lon, and searchQuery
+  const cityWeatherData = weatherData.find((weather) => {
     return (
       weather.lat.toString() === lat &&
       weather.lon.toString() === lon &&
@@ -32,7 +34,15 @@ app.get('/weather', (req, res) => {
     );
   });
 
-  res.json(filteredWeatherData);
+  // If the city is not found, return an error
+  if (!cityWeatherData) {
+    return res.status(404).json({ error: 'City not found in the weather data.' });
+  }
+
+  // If the city is found, you can proceed with creating the Forecast objects in the next steps.
+  // For now, you can return the cityWeatherData as a response to verify it is coming through correctly.
+
+  res.json({ cityWeatherData });
 });
 
 // Start the server to listen on the defined port
